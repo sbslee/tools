@@ -1,13 +1,29 @@
 import sys
 import pandas as pd
 
+def pick_alt_allele(df):
+    def one_row(r):
+        majors = [x for x in r.majorAllele.split(',') if x]
+        minors = [x for x in r.minorAllele.split(',') if x]
+        a = max(majors, key=majors.count)
+        b = max(minors, key=minors.count)
+        if a == r.ref and b != r.ref:
+            r.alts = b
+        elif a != r.ref and b == r.ref:
+            r.alts = a
+        else:
+            raise ValueError()
+        return r
+    df = df.apply(one_row, axis=1)
+    return df
+
 def parse_ucsc_output(file, assembly):
     df = pd.read_csv(file)
     if df.shape[1] != 17:
         raise ValueError()
     for x in ['hap', 'fix', 'alt']:    
         df = df[~df['#chrom'].str.contains(x)]
-    df['alts'] = df['alts'].str.strip(',')
+    df = pick_alt_allele(df)
     df = df[['class', 'name', '#chrom', 'chromEnd', 'ref', 'alts']]
     df.columns = ['type', 'rs_id', f'{assembly}_chr', f'{assembly}_pos', f'{assembly}_ref', f'{assembly}_alt']
     if not df[df.duplicated('rs_id')].empty:
