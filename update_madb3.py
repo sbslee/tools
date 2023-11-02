@@ -35,7 +35,7 @@ def check_status(df1 , df2):
 def append_absent_data(df1, df2):
     df3 = df2[df2.status == 'absent']
     df3 = df3.drop(columns='status')
-    df3['set_jpn_disease'] = 'yes'
+    df3['set_jpn_trait'] = 'yes'
     df4 = pd.concat([df1, df3])
     df4 = df4.fillna('.')
     return df4
@@ -53,7 +53,7 @@ def fill_missing_ea(df1, df2):
             r.grch38_ea = df.grch38_ea.values[0]
             r.grch37_alt = df.grch38_alt.values[0]
             r.grch38_alt = df.grch38_alt.values[0]
-            r.set_jpn_disease = 'yes'
+            r.set_jpn_trait = 'yes'
         else:
             print(r)
             print(df)
@@ -69,7 +69,7 @@ def update_set_field(df1, df2):
         if df.empty:
             pass
         elif df.shape[0] == 1:
-            r.set_jpn_disease = 'yes'
+            r.set_jpn_trait = 'yes'
         else:
             raise ValueError()
         return r

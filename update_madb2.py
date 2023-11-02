@@ -19,6 +19,9 @@ def main(madb1_file, ea_file):
             r.grch37_alt = r.ea
             r.grch38_alt = r.ea
             r.status = 'pass'
+        elif r.ea == r.grch37_ref and r.ea != r.grch37_alt and r.ea != r.grch38_ref and r.ea != r.grch38_alt:
+            r.grch38_alt = r.ea
+            r.status = 'pass'
         return r
 
     df3 = df3.apply(one_row, axis=1)
