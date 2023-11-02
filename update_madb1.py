@@ -37,7 +37,7 @@ def check_data(df):
             raise ValueError()
     df.apply(one_row, axis=1)
 
-def prepare_madb_table(grch37_file, grch38_file, output_file):
+def prepare_madb_table(grch37_file, grch38_file):
     df1 = parse_ucsc_output(grch37_file, 'grch37')
     df2 = parse_ucsc_output(grch38_file, 'grch38')
     df3 = df1.merge(df2, left_index=True, right_index=True)
@@ -48,7 +48,7 @@ def prepare_madb_table(grch37_file, grch38_file, output_file):
     df3 = df3.drop(columns='type_y')
     df3 = df3.rename(columns={'type_x': 'type'})
     check_data(df3)
-    df3.to_csv(output_file)
+    df3.to_csv('update-madb-1.csv')
 
 if __name__ == '__main__':
     prepare_madb_table(*sys.argv[1:])

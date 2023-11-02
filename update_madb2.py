@@ -1,8 +1,8 @@
 import sys
 import pandas as pd
 
-def main(ucsc_file, ea_file, output_file):
-    df1 = pd.read_csv(ucsc_file)
+def main(madb1_file, ea_file):
+    df1 = pd.read_csv(madb1_file)
     df1['grch38_ea'] = '.'
     df1['status'] = 'fail'
     df1.insert(df1.columns.get_loc('grch37_alt')+1, 'grch37_ea', df1.grch38_ea.copy())
@@ -23,7 +23,7 @@ def main(ucsc_file, ea_file, output_file):
 
     df3 = df3.apply(one_row, axis=1)
     df3 = df3.drop(columns='ea')
-    df3.to_csv(output_file, index=False)
+    df3.to_csv('update-madb-2.csv', index=False)
 
 if __name__ == '__main__':
     main(*sys.argv[1:])

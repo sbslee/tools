@@ -73,9 +73,9 @@ def update_set_field(df1, df2):
     df4 = df1.apply(one_row, axis=1)
     return df4
 
-def main(madb_file, final_file):
+def main(madb_file, madb2_file):
     df1 = pd.read_csv(madb_file)
-    df2 = pd.read_csv(final_file)
+    df2 = pd.read_csv(madb2_file)
 
     df3 = check_status(df1, df2)
 
@@ -89,7 +89,7 @@ def main(madb_file, final_file):
     if any(df6.duplicated(['grch38_chr', 'grch38_pos', 'grch38_ref', 'grch38_alt', 'grch38_ea'])):
         raise ValueError()
         
-    df6.to_csv('madb.csv', index=False)
+    df6.to_csv('update-madb-3.csv', index=False)
 
 if __name__ == '__main__':
     main(*sys.argv[1:])
