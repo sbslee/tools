@@ -1,5 +1,6 @@
 import sys
 import pandas as pd
+import warnings
 
 def check_status(df1 , df2):
     def one_row(r):
@@ -14,19 +15,21 @@ def check_status(df1 , df2):
                 if tmp.shape[0] == 1:
                     r.status = 'fill'
                 else:
-                    r.status = 'progress'
+                    r.status = 'manual'
             else:
                 r.status = 'absent'
         else:
             if r.grch37_ea in df.grch37_ea.values and r.grch38_ea in df.grch38_ea.values:
                 r.status = 'present'
             else:
-                r.status = 'progress'
+                r.status = 'error'
         return r
     df3 = df2.apply(one_row, axis=1)
-    df3.to_csv('test.csv')
-#     if not df3[df3.status == 'progress'].empty:
-#         raise ValueError()
+    df3.to_csv('update-madb-3-review.csv')
+    if not df3[df3.status == 'manual'].empty:
+        warnings.warn('Some alleles need to be reviewed manually.')
+    if not df3[df3.status == 'error'].empty:
+        raise ValueError()
     return df3
 
 def append_absent_data(df1, df2):
